@@ -404,27 +404,31 @@ exports.updateProduct = async (req, res, next) => {
 
 }
 
-// exports.deleteReview = async (req, res, next) => {
-//   const review = await Product.reviews.findById(req.params.id);
+exports.deleteReview = async (req, res, next) => {
 
-//   if (!review) {
-//     return res.status(404).json({
-//       success: false,
+  const product = await Product.findById(req.query.productId);
 
-//       message: "Review not found",
-//     });
-//   }
+  console.log(product);
 
-//   await review.remove();
+  const reviews = product.reviews.filter(review => review._id.toString() !== req.query.id.toString());
 
-//   if (!review) {
-//     return next(new ErrorHandler("Review not found", 404));
-//   }
+  const numOfReviews = reviews.length;
 
-//   res.status(200).json({
-//     success: true,
+  const ratings = product.reviews.reduce((acc, item) => item.rating + acc, 0) / reviews.length
 
-//     review,
-//   });
-// };
+  await Product.findByIdAndUpdate(req.query.productId, {
+      reviews,
+      ratings,
+      numOfReviews
+  }, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false
+  })
+
+  res.status(200).json({
+      success: true
+  })
+}
+
 

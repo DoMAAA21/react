@@ -19,7 +19,7 @@ const {
   createProductReview,
   getProductReviews,
   getAdminProducts,
-  // deleteReview
+  deleteReview
 } = require("../controllers/productController");
 
 // router.get("/products", isAuthenticatedUser, getProducts);
@@ -34,7 +34,7 @@ router.get('/admin/products',isAuthenticatedUser ,getAdminProducts);
 router.post('/admin/product/new', isAuthenticatedUser, authorizeRoles('admin'), upload.array('images', 10),newProduct);
 router.route('/admin/product/:id').put(isAuthenticatedUser, authorizeRoles('admin'), upload.array('images', 10), updateProduct)
 
-// router.route('/reviews/:id').delete(isAuthenticatedUser, deleteReview);
+router.route('/reviews').delete(isAuthenticatedUser, deleteReview);
 // router.get(
 //   "/products",
 //   isAuthenticatedUser,

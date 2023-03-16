@@ -10,7 +10,7 @@ import Loader from '../layout/Loader'
 
 import Sidebar from './Sidebar'
 
-
+import { useNavigate} from 'react-router-dom'
 
 // import { useAlert } from 'react-alert'
 import { toast } from 'react-toastify'
@@ -27,12 +27,22 @@ import { DELETE_REVIEW_RESET } from '../../constants/productConstants'
 
 const ProductReviews = () => {
 
-
+    let navigate = useNavigate();
 
     const [productId, setProductId] = useState('')
 
 
-
+    const notifys = (message = "") =>
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
     // const alert = useAlert();
 
     const dispatch = useDispatch();
@@ -52,9 +62,9 @@ const ProductReviews = () => {
 
     const { error, reviews } = useSelector(state => state.productReviews);
 
-    //  const { isDeleted, error: deleteError } = useSelector(state => state.review)
+     const { isDeleted, error: deleteError } = useSelector(state => state.review)
     // const {  error: deleteError } = useSelector(state => state.review)
-    const { isDeleted, error: deleteError } = useSelector(state => state.review)
+    // const { isDeleted, error: deleteError } = useSelector(state => state.review)
 
 
     useEffect(() => {
@@ -92,7 +102,7 @@ const ProductReviews = () => {
         if (isDeleted) {
 
             successMsg('Review deleted successfully');
-
+            navigate('/admin/reviews');
             dispatch({ type: DELETE_REVIEW_RESET })
 
         }
@@ -103,15 +113,18 @@ const ProductReviews = () => {
 
 
 
-    }, [dispatch, error, productId, deleteError])
+    // }, [dispatch, error, productId, deleteError])
 
-    // }, [dispatch, error, productId])
+    }, [dispatch, error, productId])
 
    
 
     const deleteReviewHandler = (id) => {
 
         dispatch(deleteReview(id, productId))
+        successMsg('Review deleted successfully');
+        navigate('/admin/reviews');
+        dispatch({ type: DELETE_REVIEW_RESET })
 
     }
 
